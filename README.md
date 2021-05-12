@@ -1,17 +1,14 @@
-# 👷 `worker-template` Hello World
-# jamoor-middleman
-Middleman API for Blynk REST API
+# 👷 `jamoor-middleware` 🍄
+> Middleware API for Blynk REST API with Cloudflare Workers
 
-A template for kick starting a Cloudflare worker project.
+This project uses [`itty-router`](https://github.com/kwhitley/itty-router) by [Kevin R. Whitley](https://github.com/kwhitley).
 
-[`index.js`](https://github.com/cloudflare/worker-template/blob/master/index.js) is the content of the Workers script.
+## Wrangler
 
-#### Wrangler
-
-To generate using [wrangler](https://github.com/cloudflare/wrangler)
+To use this project as template using [wrangler](https://github.com/nephertz/jamoor-middleware)
 
 ```
 wrangler generate projectname https://github.com/cloudflare/worker-template
 ```
 
-Further documentation for Wrangler can be found [here](https://developers.cloudflare.com/workers/tooling/wrangler).
+Further documentation for Cloudflare Workers and Wrangler can be found [here](https://developers.cloudflare.com/workers/).
