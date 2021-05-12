@@ -28,7 +28,6 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "dotenv": "^9.0.2",
     "itty-router": "^2.3.6"
   }
 }
