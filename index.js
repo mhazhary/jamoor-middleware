@@ -48,7 +48,7 @@ async function apiRequest(query, pin) {
 router.get('/:query/:pin?', ({ params }) => apiRequest(params.query, params.pin));
 // 404 for everything else
 // return a default message for the root route
-router.all('*', () => new Response('Not Found.', { status: 404 }));
+router.all('*', () => new Response('Are you lost, little boy? Not Found.', { status: 404 }));
 
 // attach the router "handle" to the event handler
 // eslint-disable-next-line no-restricted-globals
