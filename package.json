@@ -12,7 +12,8 @@
     "deploy": "webpack --bail --deploy",
     "deploy:example": "webpack --bail --example --deploy",
     "lint": "eslint src lib test webpack.config.js --ignore-pattern=eslint.test.js",
-    "reset": "webpack --bail --reset"
+    "reset": "webpack --bail --reset",
+    "postinstall": "patch-package"
   },
   "author": "M. Hanif Azhary <hanif.hz@gmail.com>",
   "license": "MIT",
@@ -28,6 +29,8 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "itty-router": "^2.3.6"
+    "@cfworker/jwt": "^1.7.0",
+    "itty-router": "^2.3.6",
+    "patch-package": "^6.4.7"
   }
 }

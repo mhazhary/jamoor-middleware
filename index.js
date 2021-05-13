@@ -1,6 +1,7 @@
 import { Router } from 'itty-router';
+import { parseJwt } from '@cfworker/jwt';
 
-const router = Router();
+const router = Router({ base: '/api' });
 const blynkServer = 'http://blynk-cloud.com';
 
 /**
@@ -15,15 +16,47 @@ async function gatherResponse(response) {
     return JSON.stringify(await response.json());
   }
   if (contentType.includes('application/text')) {
-    const bodyResponse = await response.text();
-    return bodyResponse;
+    return response.text();
   }
   if (contentType.includes('text/html')) {
-    const bodyResponse = await response.text();
-    return bodyResponse;
+    return response.text();
   }
-  const bodyResponse = await response.text();
-  return bodyResponse;
+  return response.text();
+}
+/**
+ * Gets the cookie with the name from the request headers
+ * @param {Request} request incoming Request
+ * @param {string} name of the cookie to get
+ */
+function getCookie(request, name) {
+  let result = '';
+  const cookieString = request.headers.get('Cookie');
+  if (cookieString) {
+    const cookies = cookieString.split(';');
+    cookies.forEach((cookie) => {
+      const cookiePair = cookie.split('=', 2);
+      const cookieName = cookiePair[0].trim();
+      if (cookieName === name) {
+        const cookieVal = cookiePair[1];
+        result = cookieVal;
+      }
+    });
+  }
+  return result;
+}
+async function handleRequest(request) {
+  const jwt = getCookie(request, 'CF_Authorization');
+  const issuer = process.env.CERT_ISSUER; // CF Access issuer.
+  const audience = process.env.AUD_TAG; // CF Access AUD tag.
+
+  const result = await parseJwt(jwt, issuer, audience);
+  if (!result.valid) {
+    // console.debug(result.reason); // Invalid issuer/audience, expired, etc
+    return new Response(result.reason);
+  }
+  // console.debug(result.payload); // { iss, sub, aud, iat, exp, ...claims }
+  return router.handle(request);
+  // return new Response(`${result.payload}hello`);
 }
 
 /**
@@ -48,8 +81,10 @@ async function apiRequest(query, pin) {
 router.get('/:query/:pin?', ({ params }) => apiRequest(params.query, params.pin));
 // 404 for everything else
 // return a default message for the root route
-router.all('*', () => new Response('Are you lost, little boy? Not Found.', { status: 404 }));
+router.all('/*', () => new Response('Are you lost, little boy?', { status: 404 }));
 
 // attach the router "handle" to the event handler
 // eslint-disable-next-line no-restricted-globals
-addEventListener('fetch', (event) => event.respondWith(router.handle(event.request)));
+addEventListener('fetch', (event) => {
+  event.respondWith(handleRequest(event.request));
+});

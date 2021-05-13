@@ -1,7 +1,7 @@
 name = "jamoor-middleware"
 type = 'webpack'
 account_id = 'd1d1b749d25e994f0ae0d5645e75c951'
-route = '*middleware.nephertz.dev/*'
+route = '*jamoor.nephertz.dev/api*'
 zone_id = '2b3bddb01e5a56cf5b1b5ebd7d8e0365'
 workers_dev = true
 webpack_config = "webpack.config.js"

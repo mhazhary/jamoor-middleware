@@ -1,0 +1,39 @@
+diff --git a/node_modules/@cfworker/jwt/dist/jwks.js b/node_modules/@cfworker/jwt/dist/jwks.js
+index 8a43ac3..7300917 100644
+--- a/node_modules/@cfworker/jwt/dist/jwks.js
++++ b/node_modules/@cfworker/jwt/dist/jwks.js
+@@ -3,7 +3,7 @@ export async function getJwks(issuer) {
+     if (!url.pathname.endsWith('/')) {
+         url.pathname += '/';
+     }
+-    url.pathname += '.well-known/jwks.json';
++    url.pathname += 'cdn-cgi/access/certs';
+     const response = await fetch(url.href);
+     if (!response.ok) {
+         throw new Error(`Error loading jwks at ${url.href}. ${response.status} ${response.statusText}`);
+diff --git a/node_modules/@cfworker/jwt/dist/parse.js b/node_modules/@cfworker/jwt/dist/parse.js
+index 43f2143..a0237b8 100644
+--- a/node_modules/@cfworker/jwt/dist/parse.js
++++ b/node_modules/@cfworker/jwt/dist/parse.js
+@@ -22,7 +22,7 @@ export async function parseJwt(encodedToken, issuer, audience) {
+             reason: `Invalid JWT algorithm "${decoded.header.alg}". Expected "RS256".`
+         };
+     }
+-    if (decoded.payload.aud !== audience) {
++    if (String(decoded.payload.aud) !== audience) {
+         return {
+             valid: false,
+             reason: `Invalid JWT audience "${decoded.payload.aud}". Expected "${audience}".`
+diff --git a/node_modules/@cfworker/jwt/src/jwks.ts b/node_modules/@cfworker/jwt/src/jwks.ts
+index 02f99b4..955c04c 100644
+--- a/node_modules/@cfworker/jwt/src/jwks.ts
++++ b/node_modules/@cfworker/jwt/src/jwks.ts
+@@ -8,7 +8,7 @@ export async function getJwks(issuer: string): Promise<JsonWebKeyset> {
+   if (!url.pathname.endsWith('/')) {
+     url.pathname += '/';
+   }
+-  url.pathname += '.well-known/jwks.json';
++  url.pathname += 'cdn-cgi/access/certs';
+   const response = await fetch(url.href);
+   if (!response.ok) {
+     throw new Error(
