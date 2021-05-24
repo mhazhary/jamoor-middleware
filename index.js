@@ -48,7 +48,8 @@ async function handleRequest(request) {
   const jwt = getCookie(request, 'CF_Authorization');
   const issuer = process.env.CERT_ISSUER; // CF Access issuer.
   const audience = process.env.AUD_TAG; // CF Access AUD tag.
-
+  console.log(new Map(request.headers));
+  console.log(jwt);
   const result = await parseJwt(jwt, issuer, audience);
   if (!result.valid) {
     // console.debug(result.reason); // Invalid issuer/audience, expired, etc
