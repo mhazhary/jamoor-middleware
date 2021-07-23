@@ -2,7 +2,9 @@ import { Router } from 'itty-router';
 import { parseJwt } from '@cfworker/jwt';
 
 const router = Router({ base: '/api' });
-const blynkServer = 'http://blynk-cloud.com';
+// Blynk server has GEO DNS Issue and you can't use direct IP Address from Workers.
+// The workaround is adding A record with Blynk server IP Address to your domain.
+const blynkServer = 'http://blynk.ziggystardust.xyz';
 
 /**
  * gatherResponse awaits and returns a response body as a string.
@@ -48,16 +50,18 @@ async function handleRequest(request) {
   const jwt = getCookie(request, 'CF_Authorization');
   const issuer = process.env.CERT_ISSUER; // CF Access issuer.
   const audience = process.env.AUD_TAG; // CF Access AUD tag.
-  console.log(new Map(request.headers));
-  console.log(jwt);
   const result = await parseJwt(jwt, issuer, audience);
+  // console.log(new Map(request.headers));
+  // console.log(jwt);
+  // console.log(issuer);
+  // console.log(audience);
+  // console.log(result);
   if (!result.valid) {
     // console.debug(result.reason); // Invalid issuer/audience, expired, etc
     return new Response(result.reason);
   }
   // console.debug(result.payload); // { iss, sub, aud, iat, exp, ...claims }
   return router.handle(request);
-  // return new Response(`${result.payload}hello`);
 }
 
 /**
@@ -82,7 +86,7 @@ async function apiRequest(query, pin) {
 router.get('/:query/:pin?', ({ params }) => apiRequest(params.query, params.pin));
 // 404 for everything else
 // return a default message for the root route
-router.all('/*', () => new Response('Are you lost, little boy?', { status: 404 }));
+router.all('/*', () => new Response('Are you lost?', { status: 404 }));
 
 // attach the router "handle" to the event handler
 // eslint-disable-next-line no-restricted-globals
