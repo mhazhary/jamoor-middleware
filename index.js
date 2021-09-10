@@ -4,7 +4,7 @@ import { parseJwt } from '@cfworker/jwt';
 const router = Router({ base: '/api' });
 // Blynk server has GEO DNS Issue and you can't use direct IP Address from Workers.
 // The workaround is adding A record with Blynk server IP Address to your domain.
-const blynkServer = 'http://blynk.ziggystardust.xyz';
+const blynkServer = 'http://blynk.nephertz.dev';
 
 /**
  * gatherResponse awaits and returns a response body as a string.
